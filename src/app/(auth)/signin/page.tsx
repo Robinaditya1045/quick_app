@@ -21,4 +21,4 @@ const page = () => {
   )
 }
 
-export default 
+export default page
