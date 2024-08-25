@@ -1,7 +1,8 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { User } from "next-auth"
+import { User } from "next-auth";
+import prisma from "./prisma";
 
 
 export const authConfig: NextAuthOptions = {
@@ -41,6 +42,36 @@ export const authConfig: NextAuthOptions = {
     secret : process.env.NEXT_AUTH_SECRET,
     pages :{
       signIn: '/signin',
+    },
+    callbacks: {
+      async signIn({ user, account, profile, email, credentials }) {
+        // Check if the user exists in the database
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email as string },
+        })
+  
+        if (!existingUser) {
+          // If the user does not exist, create a new user in the database
+          await prisma.user.create({
+            data: {
+              name: user.name as string,
+              email: user.email as string,
+              password: "OAUTH_PLACEHOLDER_PASSWORD",
+            },
+          })
+        }
+  
+        // Return true to indicate that sign-in should be successful
+        return true
+      },
+      async session({ session, token, user }) {
+        // Include user.id in the session
+        const dbUser = await prisma.user.findUnique({
+          where: { email: session.user?.email as string },
+        })
+        session.user.id = dbUser?.id
+        return session
+      },
     },
     
 }
