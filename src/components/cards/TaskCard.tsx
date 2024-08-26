@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@components/ui/button";
 import TaskEditDialog from "@components/dialog/TaskEditDialog";
-import TaskDeleteConfirmationDialog from "@components/dialog/TaskDeleteConfirmationDialog";
+import TaskDeleteConfirmationDialog from "../dialog/TaskDeleteConfirmationDialog";
 
 interface TaskTypes {
   id: number;

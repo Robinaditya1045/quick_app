@@ -11,7 +11,13 @@ import {
 
 import { Badge } from "@components/ui/badge";
 import { Button } from "@/components/ui/button";
-
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export function Sidebar() {
   return (
@@ -54,11 +60,11 @@ export function Sidebar() {
               Links
             </Link>
             <Link
-              href="#"
+              href="/settings"
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
             >
               <Users className="h-4 w-4" />
-              Customers
+              Settings
             </Link>
             <Link
               href="#"

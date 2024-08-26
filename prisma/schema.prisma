@@ -20,4 +20,47 @@ model User {
   password  String
   createdAt DateTime @default(now())
   tasks     Tasks[]
+  links     Link[]
 }
+
+model Tasks {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  status      String?   @default("Pending")
+  targetTime  DateTime? // Field for the target time to complete the task
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  tags        Tag[]    @relation("TaskTags") // Many-to-many relation with Tag
+  parentTasks ParentChild[] @relation("ParentTasks")
+  childTasks  ParentChild[] @relation("ChildTasks")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  completedAt DateTime?
+}
+
+model ParentChild {
+  parentTaskId Int
+  childTaskId  Int
+  parentTask   Tasks @relation("ParentTasks", fields: [parentTaskId], references: [id])
+  childTask    Tasks @relation("ChildTasks", fields: [childTaskId], references: [id])
+  @@id([parentTaskId, childTaskId]) // Composite primary key
+}
+
+model Tag {
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
+  tasks Tasks[] @relation("TaskTags") // Many-to-many relation with Tasks
+}
+
+model Link {
+  id          Int      @id @default(autoincrement())
+  title       String
+  url         String
+  thumbnail   String?  // URL to the thumbnail image, optional
+  description String?  // Description or other data, optional
+  createdAt   DateTime @default(now())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+}
+
